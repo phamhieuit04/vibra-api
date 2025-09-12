@@ -16,9 +16,6 @@
             "operators": {
                 "=>": "align"
             }
-        },
-        "function_declaration": {
-            "closure_fn_spacing": "none"
         }
     }
 }
