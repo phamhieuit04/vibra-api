@@ -11,6 +11,7 @@ use App\Services\FCMService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -105,6 +106,8 @@ class FirebaseController extends Controller
 
             return ApiResponse::success();
         } catch (\Throwable $th) {
+            Log::error($th);
+
             return ApiResponse::internalServerError();
         }
     }
