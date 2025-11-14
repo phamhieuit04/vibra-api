@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             SongSeeder::class,
             BlockedSeeder::class,
             LibrarySeeder::class,
+            UserListenHistory::class,
             // BillSeeder::class,
             // BillDetailSeeder::class
         ]);

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Bill;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use PayOS\PayOS;
 
 class PayOSService
@@ -15,6 +16,11 @@ class PayOSService
      */
     public function __construct()
     {
+        Log::info("payos", [
+            env('PAYOS_CLIENT_ID'),
+            env('PAYOS_CHECKSUM_KEY'),
+            env('PAYOS_API_KEY')
+        ]);
         $this->payOS = new PayOS(
             env('PAYOS_CLIENT_ID'),
             env('PAYOS_API_KEY'),
@@ -32,13 +38,13 @@ class PayOSService
         $self = new self;
         try {
             $data = [
-                'orderCode'   => $bill->order_code,
-                'amount'      => $bill->total_price,
+                'orderCode' => $bill->order_code,
+                'amount' => $bill->total_price,
                 'description' => 'Thanh toan hoa don ' . $bill->order_code,
-                'items'       => $items,
-                'returnUrl'   => 'http://localhost:5173/paysuccess',
-                'cancelUrl'   => 'http://localhost:5173/payfail',
-                'expiredAt'   => Carbon::now()->addMinutes(10)->timestamp
+                'items' => $items,
+                'returnUrl' => 'http://localhost:5173/paysuccess',
+                'cancelUrl' => 'http://localhost:5173/payfail',
+                'expiredAt' => Carbon::now()->addMinutes(10)->timestamp
             ];
             $result = $self->payOS->createPaymentLink($data);
 
