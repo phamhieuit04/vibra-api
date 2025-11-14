@@ -12,6 +12,7 @@ use App\Services\PayOSService;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -21,12 +22,12 @@ class PaymentController extends Controller
         $now = Carbon::now();
         try {
             $newBill = Bill::create([
-                'user_id'     => Auth::user()->id,
-                'order_code'  => intval(substr(strval(microtime(true) * 10000), -6)),
+                'user_id' => Auth::user()->id,
+                'order_code' => intval(substr(strval(microtime(true) * 10000), -6)),
                 'playlist_id' => isset($params['playlist_id']) ? $params['playlist_id'] : null,
-                'status'      => 1,
-                'created_at'  => $now,
-                'updated_at'  => $now
+                'status' => 1,
+                'created_at' => $now,
+                'updated_at' => $now
             ]);
             // Check if user buy a playlist or a song only
             if (isset($params['playlist_id'])) {
@@ -37,8 +38,8 @@ class PaymentController extends Controller
                 // create bill details for each song
                 foreach ($songs as $song) {
                     BillDetail::insert([
-                        'bill_id'    => $newBill->id,
-                        'song_id'    => $song->id,
+                        'bill_id' => $newBill->id,
+                        'song_id' => $song->id,
                         'created_at' => $now,
                         'updated_at' => $now
                     ]);
@@ -48,8 +49,8 @@ class PaymentController extends Controller
             } else {
                 // create bill detail for one song
                 BillDetail::insert([
-                    'bill_id'    => $newBill->id,
-                    'song_id'    => $params['song_id'],
+                    'bill_id' => $newBill->id,
+                    'song_id' => $params['song_id'],
                     'created_at' => $now,
                     'updated_at' => $now
                 ]);
@@ -65,9 +66,9 @@ class PaymentController extends Controller
                     ->first();
                 $items = [
                     [
-                        'name'     => $songs->name,
+                        'name' => $songs->name,
                         'quantity' => 1,
-                        'price'    => $songs->price
+                        'price' => $songs->price
                     ]
                 ];
             } else {
@@ -77,9 +78,9 @@ class PaymentController extends Controller
                     ->get();
                 foreach ($songs as $song) {
                     array_push($items, [
-                        'name'     => $song->name,
+                        'name' => $song->name,
                         'quantity' => 1,
-                        'price'    => $song->price
+                        'price' => $song->price
                     ]);
                 }
             }
@@ -92,6 +93,7 @@ class PaymentController extends Controller
                 return ApiResponse::dataNotfound();
             }
         } catch (\Throwable $th) {
+            Log::error($th->getMessage());
             return ApiResponse::internalServerError();
         }
     }

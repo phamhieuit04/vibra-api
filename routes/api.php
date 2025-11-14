@@ -11,6 +11,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\SongController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -120,3 +121,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/logout', [AuthController::class, 'logout']);
 });
+
+Route::get('/get-recommended-songs', [RecommendationController::class, 'getRecommendations']);
