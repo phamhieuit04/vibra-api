@@ -7,6 +7,7 @@ use App\Helpers\FileHelper;
 use App\Models\Library;
 use App\Models\Playlist;
 use App\Models\Song;
+use App\Models\UserListenHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -29,8 +30,8 @@ class SongController extends Controller
     {
         try {
             Library::insert([
-                'user_id'    => Auth::user()->id,
-                'song_id'    => $id,
+                'user_id' => Auth::user()->id,
+                'song_id' => $id,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ]);
@@ -63,9 +64,9 @@ class SongController extends Controller
         $params = $request->all();
         if (isset($params['song_id']) && isset($params['playlist_id'])) {
             Library::insert([
-                'user_id'     => Auth::user()->id,
+                'user_id' => Auth::user()->id,
                 'playlist_id' => $params['playlist_id'],
-                'song_id'     => $params['song_id'],
+                'song_id' => $params['song_id'],
             ]);
             $playlist = Playlist::find($params['playlist_id']);
             $playlist->total_song = $playlist->total_song + 1;
@@ -83,6 +84,17 @@ class SongController extends Controller
             $song = Song::find($id);
             $song->total_played = $song->total_played + 1;
             $song->touch();
+
+            $history = UserListenHistory::updateOrCreate(
+                [
+                    'user_id' => Auth::id(),
+                    'song_id' => $id
+                ],
+                [
+                    'times' => 0,
+                ]
+            );
+            $history->increment('times');
 
             return ApiResponse::success();
         } catch (\Throwable $th) {
