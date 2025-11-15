@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FirebaseController;
 use App\Http\Controllers\GoogleDriveController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InterestedController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PaymentController;
@@ -74,6 +75,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/search', [HomeController::class, 'search']);
 
         Route::get('/get-recommended-songs', [RecommendationController::class, 'getRecommendations']);
+        Route::get('/save-interested', [InterestedController::class, 'saveInterested']);
     });
 
     Route::group(['prefix' => 'song'], function () {
