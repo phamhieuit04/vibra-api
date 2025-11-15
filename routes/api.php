@@ -72,6 +72,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/list-artist', [HomeController::class, 'listArtist']);
         Route::get('/list-category', action: [HomeController::class, 'listCategory']);
         Route::get('/search', [HomeController::class, 'search']);
+
+        Route::get('/get-recommended-songs', [RecommendationController::class, 'getRecommendations']);
     });
 
     Route::group(['prefix' => 'song'], function () {
@@ -121,5 +123,3 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/logout', [AuthController::class, 'logout']);
 });
-
-Route::get('/get-recommended-songs', [RecommendationController::class, 'getRecommendations']);

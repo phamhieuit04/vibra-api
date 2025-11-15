@@ -25,7 +25,6 @@ class UserListenHistorySeeder extends Seeder
 
         foreach ($userIds as $userId) {
 
-            // Mỗi user chỉ nghe từ 10% đến 30% tổng số bài hát
             $listenCount = rand(
                 intval($totalSongs * 0.10),
                 intval($totalSongs * 0.30)
@@ -44,7 +43,6 @@ class UserListenHistorySeeder extends Seeder
             }
         }
 
-        // Giữ nguyên logic của bạn: thêm 400 bản ghi phụ
         for ($i = 0; $i < 400; $i++) {
             $records[] = [
                 'user_id' => $userIds[array_rand($userIds)],
@@ -55,7 +53,6 @@ class UserListenHistorySeeder extends Seeder
             ];
         }
 
-        // Insert theo chunks
         foreach (array_chunk($records, 500) as $chunk) {
             DB::table('user_listen_history')->insert($chunk);
         }

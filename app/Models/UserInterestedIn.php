@@ -16,6 +16,7 @@ class UserInterestedIn extends Model
      *
      * @var array<int, string>
      */
+    protected $table = 'user_interested_in';
     protected $fillable = [
         'user_id',
         'category_id',

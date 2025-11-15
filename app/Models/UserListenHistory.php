@@ -16,6 +16,7 @@ class UserListenHistory extends Model
      *
      * @var array<int, string>
      */
+    protected $table = 'user_listen_history';
     protected $fillable = [
         'user_id',
         'song_id',

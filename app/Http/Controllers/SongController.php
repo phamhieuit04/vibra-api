@@ -85,18 +85,14 @@ class SongController extends Controller
             $song->total_played = $song->total_played + 1;
             $song->touch();
 
-            $history = UserListenHistory::updateOrCreate(
-                [
-                    'user_id' => Auth::id(),
-                    'song_id' => $id
-                ],
-                [
-                    'times' => 0,
-                ]
+            $history = UserListenHistory::firstOrNew(
+                ['user_id' => Auth::id(), 'song_id' => $id]
             );
-            $history->increment('times');
 
-            return ApiResponse::success();
+            $history->times = ($history->times ?? 0) + 1;
+            $history->save();
+
+            return ApiResponse::success($history);
         } catch (\Throwable $th) {
             return ApiResponse::internalServerError();
         }
