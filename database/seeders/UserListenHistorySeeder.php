@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class UserListenHistory extends Seeder
+class UserListenHistorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -20,10 +20,18 @@ class UserListenHistory extends Seeder
             return;
         }
 
+        $totalSongs = count($songIds);
         $records = [];
 
         foreach ($userIds as $userId) {
-            $randomSongs = collect($songIds)->shuffle()->take(rand(5, count($songIds)));
+
+            // Mỗi user chỉ nghe từ 10% đến 30% tổng số bài hát
+            $listenCount = rand(
+                intval($totalSongs * 0.10),
+                intval($totalSongs * 0.30)
+            );
+
+            $randomSongs = collect($songIds)->shuffle()->take($listenCount);
 
             foreach ($randomSongs as $songId) {
                 $records[] = [
@@ -36,6 +44,7 @@ class UserListenHistory extends Seeder
             }
         }
 
+        // Giữ nguyên logic của bạn: thêm 400 bản ghi phụ
         for ($i = 0; $i < 400; $i++) {
             $records[] = [
                 'user_id' => $userIds[array_rand($userIds)],
@@ -46,8 +55,8 @@ class UserListenHistory extends Seeder
             ];
         }
 
-        $chunks = array_chunk($records, 500);
-        foreach ($chunks as $chunk) {
+        // Insert theo chunks
+        foreach (array_chunk($records, 500) as $chunk) {
             DB::table('user_listen_history')->insert($chunk);
         }
     }
