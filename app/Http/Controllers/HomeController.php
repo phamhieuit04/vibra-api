@@ -10,6 +10,7 @@ use App\Models\Library;
 use App\Models\Playlist;
 use App\Models\Song;
 use App\Models\User;
+use App\Models\UserListenHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -107,10 +108,10 @@ class HomeController extends Controller
     {
         try {
             Library::insert([
-                'user_id'     => Auth::user()->id,
+                'user_id' => Auth::user()->id,
                 'playlist_id' => $id,
-                'created_at'  => Carbon::now(),
-                'updated_at'  => Carbon::now()
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ]);
 
             return ApiResponse::success();
@@ -156,11 +157,26 @@ class HomeController extends Controller
             FileHelper::getPlaylistsUrl($albums);
             $results = [
                 'artists' => $artists,
-                'songs'   => $songs,
-                'albums'  => $albums
+                'songs' => $songs,
+                'albums' => $albums
             ];
 
             return ApiResponse::success($results);
+        } catch (\Throwable $th) {
+            return ApiResponse::dataNotfound();
+        }
+    }
+
+    public function recentRotation()
+    {
+        try {
+            $songIds = UserListenHistory::where('user_id', Auth::id())
+                ->orderBy('updated_at', 'DESC')
+                ->limit(5)->pluck('song_id')->toArray();
+            $songs = Song::with('author')->whereIn('id', $songIds)->get();
+            FileHelper::getSongsUrl($songs);
+
+            return ApiResponse::success($songs);
         } catch (\Throwable $th) {
             return ApiResponse::dataNotfound();
         }

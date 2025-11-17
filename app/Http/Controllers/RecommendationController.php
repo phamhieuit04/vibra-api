@@ -20,10 +20,11 @@ class RecommendationController extends Controller
 
         if (!$songs) {
             $categories = UserInterestedIn::select('category_id')
-                ->where('user_id', $userId)->first();
+                ->where('user_id', $userId)
+                ->orderBy('created_at', 'DESC')->first();
             $categories = explode(',', $categories['category_id']);
             $songs = Song::with('author')
-                ->whereIn('category_id', $categories)->get();
+                ->whereIn('category_id', $categories)->limit(10)->get();
         }
 
         FileHelper::getSongsUrl($songs);

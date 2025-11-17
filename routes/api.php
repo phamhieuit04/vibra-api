@@ -73,6 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/list-artist', [HomeController::class, 'listArtist']);
         Route::get('/list-category', action: [HomeController::class, 'listCategory']);
         Route::get('/search', [HomeController::class, 'search']);
+        Route::get('/recent-rotation', [HomeController::class, 'recentRotation']);
 
         Route::get('/get-recommended-songs', [RecommendationController::class, 'getRecommendations']);
         Route::get('/save-interested', [InterestedController::class, 'saveInterested']);
