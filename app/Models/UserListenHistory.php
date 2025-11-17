@@ -22,4 +22,10 @@ class UserListenHistory extends Model
         'song_id',
         'times',
     ];
+
+    public function song()
+    {
+        return $this->belongsTo(Song::class, 'song_id');
+    }
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Song;
 use Illuminate\Support\Facades\DB;
 
 class RecommendationService
@@ -71,6 +72,6 @@ class RecommendationService
         arsort($weightedScores);
         $songIds = array_slice(array_keys($weightedScores), 0, $limit);
 
-        return DB::table('songs')->whereIn('id', $songIds)->get();
+        return Song::with('author')->whereIn('id', $songIds)->get();
     }
 }

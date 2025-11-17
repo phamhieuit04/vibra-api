@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
+use App\Helpers\FileHelper;
+use App\Models\Song;
+use App\Models\UserInterestedIn;
 use App\Services\RecommendationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +17,19 @@ class RecommendationController extends Controller
         $params = $request->all();
         $userId = Auth::id();
         $songs = RecommendationService::recommendSongsForUser($userId);
+
+        if (!$songs) {
+            $categories = UserInterestedIn::select('category_id')
+                ->where('user_id', $userId)->first();
+            $categories = explode(',', $categories['category_id']);
+            $songs = Song::with('author')
+                ->whereIn('category_id', $categories)->get();
+        }
+
+        foreach ($songs as $song) {
+            $song->thumbnail_path = FileHelper::getUrl('thumbnails', $song);
+        }
+
         return ApiResponse::success($songs);
     }
 }
