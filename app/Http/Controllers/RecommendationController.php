@@ -26,9 +26,7 @@ class RecommendationController extends Controller
                 ->whereIn('category_id', $categories)->get();
         }
 
-        foreach ($songs as $song) {
-            $song->thumbnail_path = FileHelper::getUrl('thumbnails', $song);
-        }
+        FileHelper::getSongsUrl($songs);
 
         return ApiResponse::success($songs);
     }
