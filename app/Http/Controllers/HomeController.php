@@ -167,13 +167,18 @@ class HomeController extends Controller
         }
     }
 
-    public function recentRotation()
+    public function recentRotation(Request $request)
     {
+        $params = $request->all();
         try {
             $songIds = UserListenHistory::where('user_id', Auth::id())
                 ->orderBy('updated_at', 'DESC')
-                ->limit(5)->pluck('song_id')->toArray();
-            $songs = Song::with('author')->whereIn('id', $songIds)->get();
+                ->limit($params['limit'])->pluck('song_id', 'updated_at');
+            $songs = Song::with('author')
+                ->whereIn('id', $songIds->values())
+                ->get()->sortBy(function ($song) use ($songIds) {
+                    return array_search($song->id, $songIds->values()->toArray());
+                });
             FileHelper::getSongsUrl($songs);
 
             return ApiResponse::success($songs);

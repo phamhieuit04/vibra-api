@@ -90,6 +90,7 @@ class SongController extends Controller
             );
 
             $history->times = ($history->times ?? 0) + 1;
+            $history->updated_at = now();
             $history->save();
 
             return ApiResponse::success($history);
