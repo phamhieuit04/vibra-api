@@ -178,7 +178,7 @@ class HomeController extends Controller
                 ->whereIn('id', $songIds->values())
                 ->get()->sortBy(function ($song) use ($songIds) {
                     return array_search($song->id, $songIds->values()->toArray());
-                });
+                })->values()->all();
             FileHelper::getSongsUrl($songs);
 
             return ApiResponse::success($songs);
