@@ -17,7 +17,8 @@ class UserSeeder extends Seeder
         'Yoasobi',
         'Billie Eilish',
         'Fujii Kaze',
-        'Adele'
+        'Adele',
+        'Thịnh Suy'
     ];
 
     private $emails = [
@@ -25,7 +26,8 @@ class UserSeeder extends Seeder
         'yoasobi@gmail.com',
         'billie@gmail.com',
         'fujikaze@gmail.com',
-        'adele@gmail.com'
+        'adele@gmail.com',
+        'thinhsuy@gmail.com'
     ];
 
     private $descriptions = [
@@ -33,7 +35,8 @@ class UserSeeder extends Seeder
         'YOASOBI là một nhóm nhạc pop Nhật Bản gồm hai thành viên: Ayase và Ikura...',
         'Billie Eilish Pirate Baird O’Connell, sinh ngày 18/12/2001 tại Los Angeles, là một ca sĩ kiêm nhạc sĩ người Mỹ...',
         'Fujii Kaze là một nghệ sĩ trẻ tài năng người Nhật Bản, nổi bật với giọng hát nội lực và khả năng sáng tác sâu sắc...',
-        'Adele là ca sĩ kiêm nhạc sĩ người Anh nổi tiếng với giọng hát đầy cảm xúc và phong cách soul, pop và blues...'
+        'Adele là ca sĩ kiêm nhạc sĩ người Anh nổi tiếng với giọng hát đầy cảm xúc và phong cách soul, pop và blues...',
+        'Mô tả ca sĩ Thịnh Suy'
     ];
 
     /**

@@ -17,7 +17,14 @@ class SongSeeder extends Seeder
         'My future',
         'Lost cause',
         'Shinunoga E-wa',
-        'Send My Love'
+        'Send My Love',
+        'Thắc mắc',
+        'Tiny love',
+        'Tình yêu xanh lá',
+        'Mai mình xa',
+        'Ca theo đàn',
+        '20 năm ở thế giới',
+        'Chết trong em'
     ];
 
     private $descriptions = [
@@ -28,7 +35,14 @@ class SongSeeder extends Seeder
         "Một bản ballad R&B và ambient với ảnh hưởng của soul và jazz , lời bài hát đề cập đến một bài ca ngợi tình yêu bản thân và sức mạnh cá nhân. Eilish đã viết bài hát cùng với nhà sản xuất của nó, Finneas O'Connell.",
         "Eilish sử dụng phong cách hát ngân nga. Trong lời bài hát, cô ấy ăn mừng sự chia tay với một người bạn đời cũ kiêu ngạo và thờ ơ, gọi họ là 'lost cause' trong phần điệp khúc .",
         "'Shinunoga E-Wa' là một trong những ca khúc nổi bật nhất trong album HELP EVER HURT NEVER của Fujii Kaze, phát hành năm 2020. Tựa đề bài hát, viết theo kiểu tiếng Nhật cổ, có thể hiểu là 'Thà chết còn hơn' – một cách diễn đạt mãnh liệt về tình yêu.",
-        "'Send My Love (To Your New Lover)' là ca khúc thứ ba trong album 25 của Adele, mang màu sắc khác biệt so với những bản ballad trữ tình quen thuộc của cô. Bài hát có giai điệu pop sôi động, mang hơi hướng acoustic và nhịp điệu hiện đại."
+        "'Send My Love (To Your New Lover)' là ca khúc thứ ba trong album 25 của Adele, mang màu sắc khác biệt so với những bản ballad trữ tình quen thuộc của cô. Bài hát có giai điệu pop sôi động, mang hơi hướng acoustic và nhịp điệu hiện đại.",
+        'mô tả Thắc mắc',
+        'mô tả Tiny love',
+        'mô tả Tình yêu xanh lá',
+        'mô tả Mai mình xa',
+        'mô tả Ca theo đàn',
+        'mô tả 20 năm ở thế giới',
+        'mô tả Chết trong em'
     ];
 
     /**
@@ -115,6 +129,24 @@ class SongSeeder extends Seeder
             'created_at'   => Carbon::now(),
             'updated_at'   => Carbon::now()
         ]);
+
+        // Thinh Suy
+        for ($i = 0; $i < 7; $i++) {
+            DB::table('songs')->insert([
+                'name'         => $this->names[$i + 8],
+                'author_id'    => 6,
+                'playlist_id'  => 6,
+                'category_id'  => rand(1, 10),
+                'description'  => $this->descriptions[$i + 8],
+                'lyrics'       => '/default.txt',
+                'thumbnail'    => '/default.jpg',
+                'total_played' => 0,
+                'status'       => 1,
+                'price'        => 10000,
+                'created_at'   => Carbon::now(),
+                'updated_at'   => Carbon::now()
+            ]);
+        }
 
         for ($i = $from; $i < count($this->names); $i++) {
             $song = Song::find($i + 1);
