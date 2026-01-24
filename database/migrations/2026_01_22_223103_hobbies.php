@@ -10,11 +10,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('user_interested_in', function (Blueprint $table) {
+        Schema::create('hobbies', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
-            $table->string('category_id')->nullable(); // 1,2,3,...
-            $table->string('hobby_id')->nullable(); // 1,2,3,...
+            $table->string('name');
             $table->timestamps();
         });
     }

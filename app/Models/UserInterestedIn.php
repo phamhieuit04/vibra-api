@@ -20,5 +20,6 @@ class UserInterestedIn extends Model
     protected $fillable = [
         'user_id',
         'category_id',
+        'hobby_id'
     ];
 }

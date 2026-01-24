@@ -22,6 +22,9 @@ class Song extends Model
         'lyrics',
         'status',
         'price',
+        'mood',
+        'tempo',
+        'energy',
         'created_at',
         'updated_at'
     ];

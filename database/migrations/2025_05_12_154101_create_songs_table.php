@@ -23,6 +23,9 @@ return new class extends Migration
             $table->bigInteger('total_played');
             $table->integer('status');
             $table->integer('price');
+            $table->string('mood')->nullable();
+            $table->string('tempo')->nullable();
+            $table->string('energy')->nullable();
             $table->timestamps();
         });
     }
