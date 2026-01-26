@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
@@ -61,9 +62,9 @@ class ProfileController extends Controller
         try {
             $user = Auth::user();
             $user->update([
-                'name'        => isset($params['name']) ? $params['name'] : $user->name,
-                'gender'      => isset($params['gender']) ? $params['gender'] : $user->gender,
-                'birth'       => isset($params['birth']) ? $params['birth'] : $user->birth,
+                'name' => isset($params['name']) ? $params['name'] : $user->name,
+                'gender' => isset($params['gender']) ? $params['gender'] : $user->gender,
+                'birth' => isset($params['birth']) ? $params['birth'] : $user->birth,
                 'description' => isset($params['description']) ? $params['description'] : $user->description,
             ]);
             if ($request->hasFile('avatar')) {
@@ -95,12 +96,12 @@ class ProfileController extends Controller
                 ->with('playlists')
                 ->first();
             Playlist::insert([
-                'name'       => 'Album của tôi #' . count($user->playlists) + 1,
-                'author_id'  => $user->id,
-                'thumbnail'  => $user->avatar,
-                'type'       => 1,
+                'name' => 'Album của tôi #' . count($user->playlists) + 1,
+                'author_id' => $user->id,
+                'thumbnail' => $user->avatar,
+                'type' => 1,
                 'total_song' => 0,
-                'price'      => 0,
+                'price' => 0,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ]);
@@ -116,9 +117,9 @@ class ProfileController extends Controller
         $params = $request->all();
         $playlist = Playlist::find($id);
         $playlist->update([
-            'name'        => isset($params['name']) ? $params['name'] : $playlist->name,
+            'name' => isset($params['name']) ? $params['name'] : $playlist->name,
             'description' => isset($params['description']) ? $params['description'] : $playlist->description,
-            'price'       => isset($params['price']) ? $params['price'] : $playlist->price,
+            'price' => isset($params['price']) ? $params['price'] : $playlist->price,
         ]);
         if ($request->hasFile('thumbnail')) {
             $file = $request->file('thumbnail');
@@ -135,42 +136,76 @@ class ProfileController extends Controller
     public function uploadSong(Request $request)
     {
         $params = $request->all();
+
         try {
-            if (!$request->hasFile('song') &&
-                !$request->hasFile('lyric') &&
-                !$request->hasFile('thumbnail')) {
+            if (
+                !$request->hasFile('song') ||
+                !$request->hasFile('lyric') ||
+                !$request->hasFile('thumbnail')
+            ) {
                 return ApiResponse::dataNotfound();
             }
-            if (FileHelper::store($request->file('song'), 'songs') &&
-                FileHelper::store($request->file('lyric'), 'lyrics') &&
-                FileHelper::store($request->file('thumbnail'), 'thumbnails')) {
-                $song = Song::create([
-                    'name'         => FileHelper::getFileName($request->file('song')),
-                    'author_id'    => Auth::user()->id,
-                    'playlist_id'  => isset($params['playlist-id']) ? $params['playlist-id'] : null,
-                    'category_id'  => $params['category-id'],
-                    'lyrics'       => '/' . $request->file('lyric')->getClientOriginalName(),
-                    'thumbnail'    => '/' . $request->file('thumbnail')->getClientOriginalName(),
-                    'description'  => $params['description'],
-                    'total_played' => 0,
-                    'status'       => 1,
-                    'price'        => $params['price'],
-                    'created_at'   => Carbon::now(),
-                    'updated_at'   => Carbon::now()
-                ]);
-                if (isset($params['playlist-id'])) {
-                    $playlist = Playlist::find($params['playlist-id']);
-                    $playlist->total_song = $playlist->total_song + 1;
-                    $playlist->touch();
-                }
 
-                return ApiResponse::success($song);
+            // Store files
+            FileHelper::store($request->file('song'), 'songs');
+            FileHelper::store($request->file('lyric'), 'lyrics');
+            FileHelper::store($request->file('thumbnail'), 'thumbnails');
+
+            $songFile = $request->file('song');
+
+            $relativePath = 'uploads/' . FileHelper::getNameFromEmail() . '/songs/' . $songFile->getClientOriginalName();
+            $songPath = public_path($relativePath);
+
+            $flaskUrl = 'http://127.0.0.1:5000/analyze';
+
+            $response = Http::attach(
+                'file',
+                file_get_contents($songPath),
+                $songFile->getClientOriginalName()
+            )->post($flaskUrl);
+
+            if (!$response->successful()) {
+                Log::error('Flask analyze failed', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+                return ApiResponse::internalServerError();
             }
 
-            return ApiResponse::internalServerError();
+            $analyze = $response->json();
+
+            $song = Song::create([
+                'name' => FileHelper::getFileName($songFile),
+                'author_id' => Auth::id(),
+                'playlist_id' => $params['playlist-id'] ?? null,
+                'category_id' => $params['category-id'],
+                'lyrics' => '/' . $request->file('lyric')->getClientOriginalName(),
+                'thumbnail' => '/' . $request->file('thumbnail')->getClientOriginalName(),
+                'description' => $params['description'] ?? null,
+                'total_played' => 0,
+                'status' => 1,
+                'price' => $params['price'] ?? 0,
+                'tempo' => $analyze['tempo'] ?? null,
+                'energy' => $analyze['energy'] ?? null,
+                'mood' => $analyze['mood'] ?? null,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
+
+            if (!empty($params['playlist-id'])) {
+                $playlist = Playlist::find($params['playlist-id']);
+                if ($playlist) {
+                    $playlist->increment('total_song');
+                }
+            }
+
+            return ApiResponse::success([
+                'song' => $song,
+                'analyze' => $analyze
+            ]);
+
         } catch (\Throwable $th) {
             Log::error($th);
-
             return ApiResponse::internalServerError();
         }
     }

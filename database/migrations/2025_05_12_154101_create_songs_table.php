@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -24,8 +23,8 @@ return new class extends Migration
             $table->integer('status');
             $table->integer('price');
             $table->string('mood')->nullable();
-            $table->string('tempo')->nullable();
-            $table->string('energy')->nullable();
+            $table->float('tempo')->nullable();
+            $table->float('energy')->nullable();
             $table->timestamps();
         });
     }
