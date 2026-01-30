@@ -13,10 +13,15 @@ class InterestedController extends Controller
     {
         $params = $request->all();
         try {
-            UserInterestedIn::insert([
-                'user_id' => Auth::id(),
-                'category_id' => $params['category_id'],
-            ]);
+            UserInterestedIn::updateOrCreate(
+                [
+                    'user_id' => Auth::id(),
+                ],
+                [
+                    'category_id' => $params['category_id'] ?? null,
+                    'hobby_id' => $params['hobby_id'] ?? null,
+                ]
+            );
 
             return ApiResponse::success();
         } catch (\Throwable $th) {

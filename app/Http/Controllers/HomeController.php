@@ -6,6 +6,7 @@ use App\Helpers\ApiResponse;
 use App\Helpers\FileHelper;
 use App\Models\Blocked;
 use App\Models\Category;
+use App\Models\Hobby;
 use App\Models\Library;
 use App\Models\Playlist;
 use App\Models\Song;
@@ -182,6 +183,17 @@ class HomeController extends Controller
             FileHelper::getSongsUrl($songs);
 
             return ApiResponse::success($songs);
+        } catch (\Throwable $th) {
+            return ApiResponse::dataNotfound();
+        }
+    }
+
+    public function listHobby()
+    {
+        try {
+            $hobbies = Hobby::select('id', 'name')->get();
+
+            return ApiResponse::success($hobbies);
         } catch (\Throwable $th) {
             return ApiResponse::dataNotfound();
         }
