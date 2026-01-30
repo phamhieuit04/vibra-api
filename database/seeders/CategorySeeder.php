@@ -19,7 +19,17 @@ class CategorySeeder extends Seeder
         'Anime',
         'Country',
         'Blues',
-        'R&B'
+        'R&B',
+        'Nhạc Trẻ',
+        'Nhạc Trữ Tình',
+        'Nhạc Bolero',
+        'Nhạc Cách Mạng',
+        'Nhạc Dân Ca',
+        'Nhạc Rap Việt',
+        'Nhạc Rock Việt',
+        'Nhạc Pop Việt',
+        'Nhạc Thiếu Nhi',
+        'Nhạc Phật Giáo'
     ];
 
     private $descriptions = [
@@ -53,12 +63,11 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $from = count(Category::all());
-        for ($i = $from; $i < $from + 10; $i++) {
+        for ($i = 0; $i < count($this->names); $i++) {
             DB::table('categories')->insert([
                 'name'        => $this->names[$i],
-                'description' => $this->descriptions[$i],
-                'thumbnail'   => $this->thumbnails[$i],
+                'description' => $this->descriptions[$i] ?? "",
+                'thumbnail'   => $this->thumbnails[$i] ?? "",
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now()
             ]);
