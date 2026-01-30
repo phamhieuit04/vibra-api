@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
 use App\Helpers\FileHelper;
+use App\Jobs\SendAppreciationJob;
 use App\Jobs\SendGreetingJob;
 use App\Mail\SendAppreciation;
 use App\Mail\SendGreeting;
@@ -95,7 +96,8 @@ class MailController extends Controller
             foreach ($items as $item) {
                 $totalPrice += $item['price'];
             }
-            Mail::to(Auth::user())->send(new SendAppreciation($items, $totalPrice));
+
+            SendAppreciationJob::dispatch(Auth::user(), $items, $totalPrice);
 
             return ApiResponse::success();
         } catch (\Throwable $th) {
