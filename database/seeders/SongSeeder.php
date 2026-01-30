@@ -32,10 +32,10 @@ class SongSeeder extends Seeder
         'Yonezu bị ảnh hưởng bởi việc nhớ lại những điều từ khi anh ấy uống rượu. Bài hát được kể theo góc nhìn của một người tìm kiếm khoái lạc.',
         'Halzion dựa trên Soredemo, Happy End, một truyện ngắn do Hashizume Shunki viết, đánh dấu lần đầu tiên Yoasobi hợp tác với một tiểu thuyết gia chuyên nghiệp.',
         "Lấy cảm hứng từ bộ truyện tranh Blue Period của Tsubasa Yamaguchi, bài hát được mô tả là 'một bài hát cổ vũ truyền cảm hứng cho người nghe bằng cách đắm chìm vào những gì họ thích và thể hiện những gì họ thấy'.",
-        "Một bản ballad R&B và ambient với ảnh hưởng của soul và jazz , lời bài hát đề cập đến một bài ca ngợi tình yêu bản thân và sức mạnh cá nhân. Eilish đã viết bài hát cùng với nhà sản xuất của nó, Finneas O'Connell.",
-        "Eilish sử dụng phong cách hát ngân nga. Trong lời bài hát, cô ấy ăn mừng sự chia tay với một người bạn đời cũ kiêu ngạo và thờ ơ, gọi họ là 'lost cause' trong phần điệp khúc .",
-        "'Shinunoga E-Wa' là một trong những ca khúc nổi bật nhất trong album HELP EVER HURT NEVER của Fujii Kaze, phát hành năm 2020. Tựa đề bài hát, viết theo kiểu tiếng Nhật cổ, có thể hiểu là 'Thà chết còn hơn' – một cách diễn đạt mãnh liệt về tình yêu.",
-        "'Send My Love (To Your New Lover)' là ca khúc thứ ba trong album 25 của Adele, mang màu sắc khác biệt so với những bản ballad trữ tình quen thuộc của cô. Bài hát có giai điệu pop sôi động, mang hơi hướng acoustic và nhịp điệu hiện đại.",
+        "Một bản ballad R&B và ambient với ảnh hưởng của soul và jazz , lời bài hát đề cập đến một bài ca ngợi tình yêu bản thân và sức mạnh cá nhân.",
+        "Eilish sử dụng phong cách hát ngân nga. Trong lời bài hát, cô ấy ăn mừng sự chia tay với một người bạn đời cũ.",
+        "'Shinunoga E-Wa' là một ca khúc tình yêu mãnh liệt trong album HELP EVER HURT NEVER của Fujii Kaze.",
+        "'Send My Love (To Your New Lover)' là ca khúc pop sôi động trong album 25 của Adele.",
         'mô tả Thắc mắc',
         'mô tả Tiny love',
         'mô tả Tình yêu xanh lá',
@@ -45,115 +45,188 @@ class SongSeeder extends Seeder
         'mô tả Chết trong em'
     ];
 
-    /**
-     * Run the database seeds.
-     */
+    private $moods = [
+        'Lemon' => 'sad',
+        'Flamingo' => 'energetic',
+        'Halzion' => 'romantic',
+        'Gunjou' => 'epic',
+        'My future' => 'focus',
+        'Lost cause' => 'chill',
+        'Shinunoga E-wa' => 'romantic',
+        'Send My Love' => 'happy',
+        'Thắc mắc' => 'chill',
+        'Tiny love' => 'romantic',
+        'Tình yêu xanh lá' => 'chill',
+        'Mai mình xa' => 'sad',
+        'Ca theo đàn' => 'chill',
+        '20 năm ở thế giới' => 'epic',
+        'Chết trong em' => 'angry'
+    ];
+
+    private $tempos = [
+        'Lemon' => 80,
+        'Flamingo' => 150,
+        'Halzion' => 90,
+        'Gunjou' => 140,
+        'My future' => 70,
+        'Lost cause' => 75,
+        'Shinunoga E-wa' => 85,
+        'Send My Love' => 120,
+        'Thắc mắc' => 78,
+        'Tiny love' => 82,
+        'Tình yêu xanh lá' => 88,
+        'Mai mình xa' => 76,
+        'Ca theo đàn' => 90,
+        '20 năm ở thế giới' => 135,
+        'Chết trong em' => 110
+    ];
+
+    private $energies = [
+        'Lemon' => 4,
+        'Flamingo' => 9,
+        'Halzion' => 5,
+        'Gunjou' => 8,
+        'My future' => 3,
+        'Lost cause' => 3,
+        'Shinunoga E-wa' => 5,
+        'Send My Love' => 7,
+        'Thắc mắc' => 4,
+        'Tiny love' => 5,
+        'Tình yêu xanh lá' => 4,
+        'Mai mình xa' => 3,
+        'Ca theo đàn' => 4,
+        '20 năm ở thế giới' => 8,
+        'Chết trong em' => 7
+    ];
+
     public function run(): void
     {
         $from = count(Song::all());
+
         for ($i = $from; $i < $from + 2; $i++) {
             DB::table('songs')->insert([
-                'name'         => $this->names[$i],
-                'author_id'    => 1,
-                'playlist_id'  => 1,
-                'category_id'  => rand(1, 10),
-                'description'  => $this->descriptions[$i],
-                'lyrics'       => '/default.txt',
-                'thumbnail'    => '/default.jpg',
+                'name' => $this->names[$i],
+                'author_id' => 1,
+                'playlist_id' => 1,
+                'category_id' => rand(1, 10),
+                'description' => $this->descriptions[$i],
+                'lyrics' => '/default.txt',
+                'thumbnail' => '/default.jpg',
                 'total_played' => 0,
-                'status'       => 1,
-                'price'        => 10000,
-                'created_at'   => Carbon::now(),
-                'updated_at'   => Carbon::now()
+                'status' => 1,
+                'price' => 10000,
+                'mood' => $this->moods[$this->names[$i]],
+                'tempo' => $this->tempos[$this->names[$i]],
+                'energy' => $this->energies[$this->names[$i]],
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ]);
         }
+
         for ($i = $from + 2; $i < $from + 4; $i++) {
             DB::table('songs')->insert([
-                'name'         => $this->names[$i],
-                'author_id'    => 2,
-                'playlist_id'  => 2,
-                'category_id'  => rand(1, 10),
-                'description'  => $this->descriptions[$i],
-                'lyrics'       => '/default.txt',
-                'thumbnail'    => '/default.jpg',
+                'name' => $this->names[$i],
+                'author_id' => 2,
+                'playlist_id' => 2,
+                'category_id' => rand(1, 10),
+                'description' => $this->descriptions[$i],
+                'lyrics' => '/default.txt',
+                'thumbnail' => '/default.jpg',
                 'total_played' => 0,
-                'status'       => 1,
-                'price'        => 10000,
-                'created_at'   => Carbon::now(),
-                'updated_at'   => Carbon::now()
+                'status' => 1,
+                'price' => 10000,
+                'mood' => $this->moods[$this->names[$i]],
+                'tempo' => $this->tempos[$this->names[$i]],
+                'energy' => $this->energies[$this->names[$i]],
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ]);
         }
+
         for ($i = $from + 4; $i < $from + 6; $i++) {
             DB::table('songs')->insert([
-                'name'         => $this->names[$i],
-                'author_id'    => 3,
-                'playlist_id'  => 3,
-                'category_id'  => rand(1, 10),
-                'description'  => $this->descriptions[$i],
-                'lyrics'       => '/default.txt',
-                'thumbnail'    => '/default.jpg',
+                'name' => $this->names[$i],
+                'author_id' => 3,
+                'playlist_id' => 3,
+                'category_id' => rand(1, 10),
+                'description' => $this->descriptions[$i],
+                'lyrics' => '/default.txt',
+                'thumbnail' => '/default.jpg',
                 'total_played' => 0,
-                'status'       => 1,
-                'price'        => 10000,
-                'created_at'   => Carbon::now(),
-                'updated_at'   => Carbon::now()
+                'status' => 1,
+                'price' => 10000,
+                'mood' => $this->moods[$this->names[$i]],
+                'tempo' => $this->tempos[$this->names[$i]],
+                'energy' => $this->energies[$this->names[$i]],
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ]);
         }
 
         DB::table('songs')->insert([
-            'name'         => $this->names[6],
-            'author_id'    => 4,
-            'playlist_id'  => 4,
-            'category_id'  => rand(1, 10),
-            'description'  => $this->descriptions[6],
-            'lyrics'       => '/default.txt',
-            'thumbnail'    => '/default.jpg',
+            'name' => $this->names[6],
+            'author_id' => 4,
+            'playlist_id' => 4,
+            'category_id' => rand(1, 10),
+            'description' => $this->descriptions[6],
+            'lyrics' => '/default.txt',
+            'thumbnail' => '/default.jpg',
             'total_played' => 0,
-            'status'       => 1,
-            'price'        => 10000,
-            'created_at'   => Carbon::now(),
-            'updated_at'   => Carbon::now()
+            'status' => 1,
+            'price' => 10000,
+            'mood' => $this->moods[$this->names[6]],
+            'tempo' => $this->tempos[$this->names[6]],
+            'energy' => $this->energies[$this->names[6]],
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
         ]);
 
         DB::table('songs')->insert([
-            'name'         => $this->names[7],
-            'author_id'    => 5,
-            'playlist_id'  => 5,
-            'category_id'  => rand(1, 10),
-            'description'  => $this->descriptions[7],
-            'lyrics'       => '/default.txt',
-            'thumbnail'    => '/default.jpg',
+            'name' => $this->names[7],
+            'author_id' => 5,
+            'playlist_id' => 5,
+            'category_id' => rand(1, 10),
+            'description' => $this->descriptions[7],
+            'lyrics' => '/default.txt',
+            'thumbnail' => '/default.jpg',
             'total_played' => 0,
-            'status'       => 1,
-            'price'        => 10000,
-            'created_at'   => Carbon::now(),
-            'updated_at'   => Carbon::now()
+            'status' => 1,
+            'price' => 10000,
+            'mood' => $this->moods[$this->names[7]],
+            'tempo' => $this->tempos[$this->names[7]],
+            'energy' => $this->energies[$this->names[7]],
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
         ]);
 
-        // Thinh Suy
         for ($i = 0; $i < 7; $i++) {
             DB::table('songs')->insert([
-                'name'         => $this->names[$i + 8],
-                'author_id'    => 6,
-                'playlist_id'  => 6,
-                'category_id'  => rand(1, 10),
-                'description'  => $this->descriptions[$i + 8],
-                'lyrics'       => '/default.txt',
-                'thumbnail'    => '/default.jpg',
+                'name' => $this->names[$i + 8],
+                'author_id' => 6,
+                'playlist_id' => 6,
+                'category_id' => rand(1, 10),
+                'description' => $this->descriptions[$i + 8],
+                'lyrics' => '/default.txt',
+                'thumbnail' => '/default.jpg',
                 'total_played' => 0,
-                'status'       => 1,
-                'price'        => 10000,
-                'created_at'   => Carbon::now(),
-                'updated_at'   => Carbon::now()
+                'status' => 1,
+                'price' => 10000,
+                'mood' => $this->moods[$this->names[$i + 8]],
+                'tempo' => $this->tempos[$this->names[$i + 8]],
+                'energy' => $this->energies[$this->names[$i + 8]],
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ]);
         }
 
         for ($i = $from; $i < count($this->names); $i++) {
             $song = Song::find($i + 1);
-            $song->thumbnail = '/' . $this->names[$i] . ' thumbnail.jpg';
-            $song->lyrics = '/' . $this->names[$i] . ' lyrics.txt';
-            $song->total_played = rand(0, 5000);
-            $song->touch();
+            if ($song) {
+                $song->thumbnail = '/' . $this->names[$i] . ' thumbnail.jpg';
+                $song->lyrics = '/' . $this->names[$i] . ' lyrics.txt';
+                $song->total_played = rand(0, 5000);
+                $song->touch();
+            }
         }
     }
 }

@@ -14,21 +14,76 @@ class RecommendationController extends Controller
 {
     public function getRecommendations(Request $request)
     {
-        $params = $request->all();
         $userId = Auth::id();
-        $songs = RecommendationService::recommendSongsForUser($userId);
+        $limit = $request->input('limit', 10);
 
-        if (!$songs) {
-            $categories = UserInterestedIn::select('category_id')
-                ->where('user_id', $userId)
-                ->orderBy('created_at', 'DESC')->first();
-            $categories = explode(',', $categories['category_id']);
-            $songs = Song::with('author')
-                ->whereIn('category_id', $categories)->limit(10)->get();
+        try {
+            $songs = RecommendationService::recommendSongsForUser($userId, $limit);
+
+            if ($songs->isEmpty()) {
+                $songs = $this->getFallbackRecommendations($userId, $limit);
+            }
+
+            FileHelper::getSongsUrl($songs);
+
+            return ApiResponse::success([
+                'songs' => $songs,
+                'stats' => RecommendationService::getUserRecommendationStats($userId)
+            ]);
+        } catch (\Exception $e) {
+            return ApiResponse::error('Failed to get recommendations: ' . $e->getMessage(), 500);
+        }
+    }
+
+    private function getFallbackRecommendations($userId, $limit)
+    {
+        $interests = UserInterestedIn::where('user_id', $userId)->first();
+
+        if ($interests && $interests->category_id) {
+            $categories = array_filter(explode(',', $interests->category_id));
+
+            if (!empty($categories)) {
+                return Song::with('author')
+                    ->whereIn('category_id', $categories)
+                    ->where('status', 1)
+                    ->orderByDesc('total_played')
+                    ->limit($limit)
+                    ->get();
+            }
         }
 
-        FileHelper::getSongsUrl($songs);
+        return Song::with('author')
+            ->where('status', 1)
+            ->orderByDesc('total_played')
+            ->limit($limit)
+            ->get();
+    }
 
-        return ApiResponse::success($songs);
+    public function getRecommendationStats()
+    {
+        $userId = Auth::id();
+        $stats = RecommendationService::getUserRecommendationStats($userId);
+
+        return ApiResponse::success($stats);
+    }
+
+    public function updateInterests(Request $request)
+    {
+        $validated = $request->validate([
+            'category_id' => 'required|string',
+            'hobby_id' => 'nullable|string'
+        ]);
+
+        $userId = Auth::id();
+
+        UserInterestedIn::updateOrCreate(
+            ['user_id' => $userId],
+            [
+                'category_id' => $validated['category_id'],
+                'hobby_id' => $validated['hobby_id'] ?? ''
+            ]
+        );
+
+        return ApiResponse::success(['message' => 'Interests updated successfully']);
     }
 }
