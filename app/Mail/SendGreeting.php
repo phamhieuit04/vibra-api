@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -16,7 +17,7 @@ class SendGreeting extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(public User $user)
     {
         //
     }
@@ -39,7 +40,7 @@ class SendGreeting extends Mailable
         return new Content(
             view: 'mails.send_greeting',
             with: [
-                'user' => Auth::user()
+                'user' => $this->user
             ]
         );
     }

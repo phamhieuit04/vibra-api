@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
 use App\Helpers\FileHelper;
+use App\Jobs\SendGreetingJob;
 use App\Mail\SendAppreciation;
 use App\Mail\SendGreeting;
 use App\Models\Bill;
@@ -46,7 +47,7 @@ class MailController extends Controller
     public function sendGreeting()
     {
         try {
-            Mail::to(Auth::user())->send(new SendGreeting);
+            SendGreetingJob::dispatch(Auth::id());
 
             return ApiResponse::success();
         } catch (\Throwable $th) {
