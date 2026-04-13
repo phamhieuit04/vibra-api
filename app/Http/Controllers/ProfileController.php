@@ -232,12 +232,22 @@ class ProfileController extends Controller
                         ->join('bill_details', 'bills.id', 'bill_details.bill_id')
                         ->join('songs', 'songs.id', 'bill_details.song_id')
                         ->first();
-                    $bill->song = ['name' => $song->name, 'quantity' => 1, 'price' => $song->price];
+
+                    $tempSong = Song::select('author_id', 'thumbnail')->find($song->song_id);
+
+                    $bill->song = [
+                        'name' => $song->name, 
+                        'quantity' => 1, 
+                        'price' => $song->price,
+                        'thumbnail_path' => FileHelper::getUrl('thumbnails', $tempSong),
+                    ];
                 } else {
                     Bill::where('bills.id', $bill->id)
                         ->join('playlists', 'bills.playlist_id', 'playlists.id')
                         ->get()->each(function ($_bill) use ($bill) {
-                            $bill->playlist = ['name' => $_bill->name, 'quantity' => 1, 'price' => $_bill->price];
+                            $tempPlaylist = Playlist::select('author_id', 'thumbnail')->find($_bill->playlist_id);
+
+                            $bill->playlist = ['name' => $_bill->name, 'quantity' => 1, 'price' => $_bill->price, 'thumbnail_path' => FileHelper::getUrl('thumbnails', $tempPlaylist)];
                         });
                 }
             });
