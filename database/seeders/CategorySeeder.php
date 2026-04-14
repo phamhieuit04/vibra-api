@@ -20,16 +20,13 @@ class CategorySeeder extends Seeder
         'Country',
         'Blues',
         'R&B',
-        'Nhạc Trẻ',
+        'Nhạc Đỏ',
+        'Nhạc Vàng',
+        'Nhạc Cách Mạng',
         'Nhạc Trữ Tình',
         'Nhạc Bolero',
-        'Nhạc Cách Mạng',
-        'Nhạc Dân Ca',
-        'Nhạc Rap Việt',
-        'Nhạc Rock Việt',
-        'Nhạc Pop Việt',
-        'Nhạc Thiếu Nhi',
-        'Nhạc Phật Giáo'
+        'Nhạc Hải Ngoại',
+        'Nhạc Thiếu Nhi'
     ];
 
     private $descriptions = [
@@ -42,7 +39,14 @@ class CategorySeeder extends Seeder
         'Thể loại mang phong cách wibu, với nhịp điều và lời hát cảm xúc, như kể câu chuyện đầy xúc cảm của bản thân',
         'Thể loại âm nhạc truyền thống Mỹ, thường kể chuyện qua lời ca mộc mạc và giai điệu dịu dàng.',
         'Thể loại sâu lắng và đầy cảm xúc, khởi nguồn từ cộng đồng người Mỹ gốc Phi ở miền Nam nước Mỹ.',
-        'Thể loại pha trộn giữa soul, funk và pop, nổi bật với giọng hát đầy nội lực và cảm xúc.'
+        'Thể loại pha trộn giữa soul, funk và pop, nổi bật với giọng hát đầy nội lực và cảm xúc.',
+        'Dòng nhạc cách mạng mang âm hưởng hào hùng, ngợi ca Tổ quốc, lý tưởng và tinh thần chiến đấu của dân tộc Việt Nam.',
+        'Dòng nhạc miền Nam trước 1975 với giai điệu buồn man mác, lời ca trữ tình về tình yêu, quê hương và thân phận.',
+        'Dòng nhạc ra đời trong thời kỳ kháng chiến, mang âm hưởng hùng tráng, thể hiện tinh thần yêu nước và đấu tranh.',
+        'Dòng nhạc nhẹ nhàng, sâu lắng với giai điệu và lời ca đậm chất thơ, thường nói về tình yêu và cuộc sống.',
+        'Dòng nhạc Nam Bộ mộc mạc, tha thiết với nhịp điệu chậm rãi, thường gắn với hình ảnh sông nước và tình cảm đôi lứa.',
+        'Dòng nhạc Việt được sáng tác và trình bày bởi cộng đồng người Việt ở nước ngoài, mang nỗi nhớ quê hương da diết.',
+        'Dòng nhạc trong sáng, vui tươi dành cho trẻ em với giai điệu đơn giản, dễ nhớ và lời ca hồn nhiên.'
     ];
 
     private $thumbnails = [
@@ -55,12 +59,16 @@ class CategorySeeder extends Seeder
         '/anime.jpg',
         '/country.jpg',
         '/blues.jpg',
-        '/r&b.jpg'
+        '/r&b.jpg',
+        '/nhacdo.jpg',
+        '/nhacvang.jpg',
+        '/nhaccachmang.jpg',
+        '/nhactrutinh.jpg',
+        '/nhacbolero.jpg',
+        '/nhachaingoai.jpg',
+        '/nhacthieunhi.jpg'
     ];
 
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         for ($i = 0; $i < count($this->names); $i++) {
