@@ -23,7 +23,8 @@ class UserSeeder extends Seeder
         'Chế Linh',
         'Hương Lan',
         'Khánh Ly',
-        'Tuấn Ngọc'
+        'Tuấn Ngọc',
+        'Sơn Tùng M-TP'
     ];
 
     private $emails = [
@@ -37,7 +38,8 @@ class UserSeeder extends Seeder
         'chelinh@gmail.com',
         'huonglan@gmail.com',
         'khanhlyvn@gmail.com',
-        'tuanngoc@gmail.com'
+        'tuanngoc@gmail.com',
+        'sontungmtp@gmail.com'
     ];
 
     private $descriptions = [
@@ -51,7 +53,8 @@ class UserSeeder extends Seeder
         'Chế Linh là danh ca nhạc vàng – bolero người Việt gốc Chăm, với giọng hát trầm ấm, da diết và sự nghiệp kéo dài hơn nửa thế kỷ.',
         'Hương Lan là nữ danh ca nhạc vàng – bolero và nhạc trữ tình quê hương, nổi tiếng với giọng hát trong trẻo, đậm chất miền Nam.',
         'Khánh Ly là nữ danh ca người Việt Nam, gắn liền với dòng nhạc trữ tình và nhạc Trịnh Công Sơn, sở hữu giọng hát đặc trưng sâu lắng, u buồn.',
-        'Tuấn Ngọc là ca sĩ hải ngoại người Mỹ gốc Việt, được mệnh danh là "giọng ca vàng" của làng nhạc hải ngoại với phong cách trữ tình, sang trọng.'
+        'Tuấn Ngọc là ca sĩ hải ngoại người Mỹ gốc Việt, được mệnh danh là "giọng ca vàng" của làng nhạc hải ngoại với phong cách trữ tình, sang trọng.',
+        'Sơn Tùng M-TP là ca sĩ, nhạc sĩ và rapper người Việt Nam nổi bật với phong cách pop hiện đại, giai điệu bắt tai và sức ảnh hưởng lớn đến nhạc trẻ Việt.'
     ];
 
     public function run(): void

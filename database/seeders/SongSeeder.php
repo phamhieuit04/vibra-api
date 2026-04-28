@@ -41,6 +41,55 @@ class SongSeeder extends Seeder
         'Mưa nửa đêm',
         'Rồi mai tôi đưa em'
     ];
+    private $sonTungSongNames = [
+        'Hãy trao cho anh',
+        'Lạc trôi',
+        'Nơi này có anh',
+        'Chạy ngay đi',
+        'Chúng ta của hiện tại',
+        'Có chắc yêu là đây',
+        'Muộn rồi mà sao còn'
+    ];
+
+    private $sonTungDescriptions = [
+        'Ca khúc dance-pop pha Latin pop mang năng lượng bùng nổ, đánh dấu giai đoạn Sơn Tùng M-TP mở rộng âm nhạc ra thị trường quốc tế.',
+        'Bản future bass / pop mang màu sắc u tối, giai điệu cuốn và chất bay đặc trưng, một trong những ca khúc định hình phong cách của Sơn Tùng M-TP.',
+        'Bản pop-ballad ngọt ngào, lãng mạn với giai điệu dễ nhớ và ca từ tỏ tình đầy cảm xúc, thuộc nhóm ca khúc được yêu thích nhất của Sơn Tùng M-TP.',
+        'Ca khúc dance-pop sôi động với nhịp điệu dồn dập, mang tinh thần mạnh mẽ và bứt phá đặc trưng của Sơn Tùng M-TP.',
+        'Bản pop-ballad hiện đại, nhẹ nhàng và tình cảm, kể về một mối quan hệ vừa gần gũi vừa nhiều day dứt.',
+        'Ca khúc pop ballad ngọt ngào, trong sáng, được phối khí ấm áp và giàu cảm xúc yêu đương.',
+        'Bản ballad buồn, tiết tấu chậm, giàu cảm xúc tiếc nuối và cô đơn trong tình yêu.'
+    ];
+
+    private $sonTungMoods = [
+        'Hãy trao cho anh' => 'energetic',
+        'Lạc trôi' => 'epic',
+        'Nơi này có anh' => 'romantic',
+        'Chạy ngay đi' => 'energetic',
+        'Chúng ta của hiện tại' => 'romantic',
+        'Có chắc yêu là đây' => 'romantic',
+        'Muộn rồi mà sao còn' => 'sad'
+    ];
+
+    private $sonTungTempos = [
+        'Hãy trao cho anh' => 128,
+        'Lạc trôi' => 100,
+        'Nơi này có anh' => 104,
+        'Chạy ngay đi' => 126,
+        'Chúng ta của hiện tại' => 84,
+        'Có chắc yêu là đây' => 96,
+        'Muộn rồi mà sao còn' => 72
+    ];
+
+    private $sonTungEnergies = [
+        'Hãy trao cho anh' => 8,
+        'Lạc trôi' => 6,
+        'Nơi này có anh' => 5,
+        'Chạy ngay đi' => 8,
+        'Chúng ta của hiện tại' => 4,
+        'Có chắc yêu là đây' => 5,
+        'Muộn rồi mà sao còn' => 3
+    ];
 
     private $descriptions = [
         'Phát hành dưới dạng đĩa đơn vào ngày 14 tháng 3 năm 2018. Bên cạnh đó, đây cũng chính là ca khúc chủ đề của bộ phim truyền hình đình đám Unnatural lên sóng cùng năm',
@@ -106,6 +155,14 @@ class SongSeeder extends Seeder
         'Dấu tình sầu' => 'sad',
         'Mưa nửa đêm' => 'sad',
         'Rồi mai tôi đưa em' => 'romantic'
+        ,
+        'Hãy trao cho anh' => 'energetic',
+        'Lạc trôi' => 'epic',
+        'Nơi này có anh' => 'romantic',
+        'Chạy ngay đi' => 'energetic',
+        'Chúng ta của hiện tại' => 'romantic',
+        'Có chắc yêu là đây' => 'romantic',
+        'Muộn rồi mà sao còn' => 'sad'
     ];
 
     private $tempos = [
@@ -139,6 +196,14 @@ class SongSeeder extends Seeder
         'Dấu tình sầu' => 70,
         'Mưa nửa đêm' => 63,
         'Rồi mai tôi đưa em' => 74
+        ,
+        'Hãy trao cho anh' => 128,
+        'Lạc trôi' => 100,
+        'Nơi này có anh' => 104,
+        'Chạy ngay đi' => 126,
+        'Chúng ta của hiện tại' => 84,
+        'Có chắc yêu là đây' => 96,
+        'Muộn rồi mà sao còn' => 72
     ];
 
     private $energies = [
@@ -172,6 +237,14 @@ class SongSeeder extends Seeder
         'Dấu tình sầu' => 2,
         'Mưa nửa đêm' => 2,
         'Rồi mai tôi đưa em' => 3
+        ,
+        'Hãy trao cho anh' => 8,
+        'Lạc trôi' => 6,
+        'Nơi này có anh' => 5,
+        'Chạy ngay đi' => 8,
+        'Chúng ta của hiện tại' => 4,
+        'Có chắc yêu là đây' => 5,
+        'Muộn rồi mà sao còn' => 3
     ];
 
     // 11=Nhạc Đỏ, 12=Nhạc Vàng, 13=Nhạc Cách Mạng, 14=Nhạc Trữ Tình, 15=Nhạc Bolero, 16=Nhạc Hải Ngoại
@@ -413,11 +486,42 @@ class SongSeeder extends Seeder
             ]);
         }
 
+        for ($i = 0; $i < count($this->sonTungSongNames); $i++) {
+            DB::table('songs')->insert([
+                'name' => $this->sonTungSongNames[$i],
+                'author_id' => 12,
+                'playlist_id' => 12,
+                'category_id' => 1,
+                'description' => $this->sonTungDescriptions[$i],
+                'lyrics' => '/default.txt',
+                'thumbnail' => '/default.jpg',
+                'total_played' => 0,
+                'status' => 1,
+                'price' => 10000,
+                'mood' => $this->sonTungMoods[$this->sonTungSongNames[$i]],
+                'tempo' => $this->sonTungTempos[$this->sonTungSongNames[$i]],
+                'energy' => $this->sonTungEnergies[$this->sonTungSongNames[$i]],
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]);
+        }
+
         for ($i = $from; $i < count($this->names); $i++) {
             $song = Song::find($i + 1);
             if ($song) {
                 $song->thumbnail = '/' . $this->names[$i] . ' thumbnail.jpg';
                 $song->lyrics = '/' . $this->names[$i] . ' lyrics.txt';
+                $song->total_played = rand(0, 5000);
+                $song->touch();
+            }
+        }
+
+        $sonTungOffset = count($this->names);
+        for ($i = 0; $i < count($this->sonTungSongNames); $i++) {
+            $song = Song::find($from + $sonTungOffset + $i + 1);
+            if ($song) {
+                $song->thumbnail = '/' . $this->sonTungSongNames[$i] . ' thumbnail.jpg';
+                $song->lyrics = '/' . $this->sonTungSongNames[$i] . ' lyrics.txt';
                 $song->total_played = rand(0, 5000);
                 $song->touch();
             }

@@ -20,7 +20,8 @@ class PlaylistSeeder extends Seeder
         'Tuyển Tập Chế Linh',
         'Tuyển Tập Hương Lan',
         'Tình Ca Khánh Ly',
-        'Dấu Tình Sầu - Tuấn Ngọc'
+        'Dấu Tình Sầu - Tuấn Ngọc',
+        'Tuyển Tập Sơn Tùng M-TP'
     ];
 
     private $descriptions = [
@@ -34,7 +35,8 @@ class PlaylistSeeder extends Seeder
         'Tuyển tập những ca khúc bolero và nhạc vàng bất hủ gắn liền với tên tuổi danh ca Chế Linh qua nhiều thập kỷ.',
         'Tuyển tập những bài nhạc vàng, bolero và dân ca Nam Bộ quen thuộc nhất của danh ca Hương Lan.',
         'Tuyển tập những ca khúc trữ tình sâu lắng gắn liền với tên tuổi danh ca Khánh Ly, đặc biệt là nhạc Trịnh Công Sơn.',
-        'Tuyển tập các tình khúc hải ngoại sang trọng, đầy cảm xúc qua giọng ca vàng của Tuấn Ngọc.'
+        'Tuyển tập các tình khúc hải ngoại sang trọng, đầy cảm xúc qua giọng ca vàng của Tuấn Ngọc.',
+        'Tuyển tập những ca khúc pop nổi bật gắn liền với tên tuổi Sơn Tùng M-TP, từ ballad tình cảm đến các bản dance-pop sôi động.'
     ];
 
     public function run(): void
