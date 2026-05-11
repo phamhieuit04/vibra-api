@@ -126,4 +126,5 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('/logout', [AuthController::class, 'logout']);
+    Route::get('/check-token', [AuthController::class, 'checkToken']);
 });

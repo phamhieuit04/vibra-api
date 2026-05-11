@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -69,5 +70,35 @@ class AuthController extends Controller
         } catch (\Throwable $th) {
             return ApiResponse::internalServerError();
         }
+    }
+
+    public function checkToken(Request $request)
+    {
+        $bearer = $request->bearerToken();
+
+        if (!$bearer) {
+            return ApiResponse::unauthorized();
+        }
+
+        [$id, $plainTextToken] = explode('|', $bearer);
+
+        $token = PersonalAccessToken::find($id);
+
+        if (!$token) {
+            return ApiResponse::unauthorized();
+        }
+
+        if (!hash_equals($token->token, hash('sha256', $plainTextToken))) {
+            return ApiResponse::unauthorized();
+        }
+
+        if ($token->expires_at && now()->greaterThan($token->expires_at)) {
+            $token->delete();
+            return ApiResponse::unauthorized();
+        }
+
+        return ApiResponse::success([
+            'valid' => true
+        ]);
     }
 }
