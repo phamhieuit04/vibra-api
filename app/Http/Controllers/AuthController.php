@@ -19,11 +19,15 @@ class AuthController extends Controller
         $params = $request->all();
         try {
             Auth::attempt([
-                'email'    => $params['email'],
+                'email' => $params['email'],
                 'password' => $params['password']
             ]);
             $user = Auth::user();
-            $user->token = $user->createToken($user->email)->plainTextToken;
+            $user->token = $user->createToken(
+                $user->email,
+                ['*'],
+                now()->addDays(7)
+            )->plainTextToken;
             $user->avatar_path = FileHelper::getAvatar($user);
 
             return ApiResponse::success($user);
@@ -37,10 +41,10 @@ class AuthController extends Controller
         $params = $request->all();
         try {
             $user = User::create([
-                'name'       => explode('@', $params['email'])[0],
-                'email'      => $params['email'],
-                'password'   => Hash::make($params['password']),
-                'avatar'     => '/default.jpg',
+                'name' => explode('@', $params['email'])[0],
+                'email' => $params['email'],
+                'password' => Hash::make($params['password']),
+                'avatar' => '/default.jpg',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ]);

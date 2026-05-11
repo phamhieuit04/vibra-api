@@ -31,7 +31,11 @@ class FirebaseController extends Controller
                         $user->email_verified_at = Carbon::now();
                         $user->touch();
                     }
-                    $user->token = $user->createToken($user->email)->plainTextToken;
+                    $user->token = $user->createToken(
+                        $user->email,
+                        ['*'],
+                        now()->addDays(7)
+                    )->plainTextToken;
                     $user->device_token = $params['device_token'];
                     $user->avatar_path = FileHelper::getAvatar($user);
                     $device_token = DeviceToken::where('user_id', $user->id)
@@ -39,18 +43,18 @@ class FirebaseController extends Controller
                     if (is_null($device_token)) {
                         DeviceToken::create([
                             'user_id' => $user->id,
-                            'token'   => $params['device_token']
+                            'token' => $params['device_token']
                         ]);
                     }
 
                     return ApiResponse::success($user);
                 } else {
                     $user = User::create([
-                        'name'              => explode('@', $params['email'])[0],
-                        'email'             => $params['email'],
+                        'name' => explode('@', $params['email'])[0],
+                        'email' => $params['email'],
                         'email_verified_at' => Carbon::now(),
-                        'password'          => Hash::make('12345678'),
-                        'avatar'            => '/default.jpg'
+                        'password' => Hash::make('12345678'),
+                        'avatar' => '/default.jpg'
                     ]);
                     $user->token = $user->createToken($user->email)->plainTextToken;
                     $user->device_token = $params['device_token'];
@@ -64,7 +68,7 @@ class FirebaseController extends Controller
                     if (is_null($device_token)) {
                         DeviceToken::create([
                             'user_id' => $user->id,
-                            'token'   => $params['device_token']
+                            'token' => $params['device_token']
                         ]);
                     }
 
