@@ -40,6 +40,8 @@ Route::group(['prefix' => 'firebase'], function () {
     Route::get('/notify-new-song', [FirebaseController::class, 'notifyNewSong'])->middleware('auth:sanctum');
 });
 
+Route::get('/check-token', [AuthController::class, 'checkToken']);
+
 Route::group(['prefix' => 'email'], function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/send-greeting', [MailController::class, 'sendGreeting']);
@@ -126,5 +128,4 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('/logout', [AuthController::class, 'logout']);
-    Route::get('/check-token', [AuthController::class, 'checkToken']);
 });

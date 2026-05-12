@@ -74,31 +74,30 @@ class AuthController extends Controller
 
     public function checkToken(Request $request)
     {
-        $bearer = $request->bearerToken();
-
-        if (!$bearer) {
-            return ApiResponse::unauthorized();
-        }
-
-        [$id, $plainTextToken] = explode('|', $bearer);
-
-        $token = PersonalAccessToken::find($id);
+        $params = $request->all();
+        [$id, $token] = explode('|', $params['token']);
 
         if (!$token) {
             return ApiResponse::unauthorized();
         }
 
-        if (!hash_equals($token->token, hash('sha256', $plainTextToken))) {
+        $hashedToken = hash('sha256', $token);
+
+        $token = PersonalAccessToken::where('id', $id)
+            ->where('token', $hashedToken)
+            ->first();
+
+        if (!$token) {
             return ApiResponse::unauthorized();
         }
 
         if ($token->expires_at && now()->greaterThan($token->expires_at)) {
-            $token->delete();
             return ApiResponse::unauthorized();
         }
 
+        $user = User::find($token->tokenable);
         return ApiResponse::success([
-            'valid' => true
+            $data = $user
         ]);
     }
 }
