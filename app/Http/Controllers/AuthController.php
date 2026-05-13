@@ -98,8 +98,6 @@ class AuthController extends Controller
         $user = $token->tokenable;
         $user->avatar_path = FileHelper::getAvatar($user);
         
-        return ApiResponse::success([
-            $data = $user
-        ]);
+        return ApiResponse::success($user);
     }
 }
