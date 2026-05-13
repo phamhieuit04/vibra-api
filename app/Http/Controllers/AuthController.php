@@ -95,7 +95,9 @@ class AuthController extends Controller
             return ApiResponse::unauthorized();
         }
 
-        $user = User::find($token->tokenable);
+        $user = $token->tokenable;
+        $user->avatar_path = FileHelper::getAvatar($user);
+        
         return ApiResponse::success([
             $data = $user
         ]);
