@@ -246,7 +246,7 @@ class ProfileController extends Controller
                         'thumbnail_path' => FileHelper::getUrl('thumbnails', $tempSong),
                         'lyrics' => FileHelper::getLyrics($tempSong),
                         'author_name' => $tempSong->author->name,
-                        'author_avatar_path' => FileHelper::getAvatar($tempSong->author)
+                        'author_avatar_path' => FileHelper::getAvatar($tempSong->author),
                     ];
                 } else {
                     $bills = Bill::where('bills.id', $bill->id)
