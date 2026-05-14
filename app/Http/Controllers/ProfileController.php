@@ -233,21 +233,46 @@ class ProfileController extends Controller
                         ->join('songs', 'songs.id', 'bill_details.song_id')
                         ->first();
 
-                    $tempSong = Song::select('author_id', 'thumbnail')->find($song->song_id);
+                    $tempSong = Song::with('author')
+                        ->where('id', $song->song_id)
+                        ->first();
+                    
 
                     $bill->song = [
+                        'id' => $song->song_id,
                         'name' => $song->name, 
                         'quantity' => 1, 
                         'price' => $song->price,
                         'thumbnail_path' => FileHelper::getUrl('thumbnails', $tempSong),
+                        'lyrics' => FileHelper::getLyrics($tempSong),
+                        'author_name' => $tempSong->author->name
                     ];
                 } else {
-                    Bill::where('bills.id', $bill->id)
+                    $bills = Bill::where('bills.id', $bill->id)
                         ->join('playlists', 'bills.playlist_id', 'playlists.id')
                         ->get()->each(function ($_bill) use ($bill) {
-                            $tempPlaylist = Playlist::select('author_id', 'thumbnail')->find($_bill->playlist_id);
+                            $tempPlaylist = Playlist::find($_bill->playlist_id);
 
-                            $bill->playlist = ['name' => $_bill->name, 'quantity' => 1, 'price' => $_bill->price, 'thumbnail_path' => FileHelper::getUrl('thumbnails', $tempPlaylist)];
+                            $tempSongs = Song::select('songs.id', 'songs.name', 'songs.price', 'songs.thumbnail', 'songs.author_id', 'songs.lyrics')
+                                ->where('playlist_id', $tempPlaylist->id)
+                                ->with('author')
+                                ->get();
+                            $tempSongs->each(function ($song) {
+                                $song->lyrics = FileHelper::getLyrics($song);
+                                $song->thumbnail_path = FileHelper::getUrl('thumbnails', $song);
+                                $song->author_name = $song->author->name;
+
+                                unset($song->thumbnail, $song->author_id, $song->author);
+                            });
+
+                            
+                            $bill->playlist = [
+                                'name' => $_bill->name, 
+                                'quantity' => 1, 
+                                'price' => $_bill->price, 
+                                'thumbnail_path' => FileHelper::getUrl('thumbnails', $tempPlaylist),
+                                'songs' => $tempSongs
+                            ];
                         });
                 }
             });
