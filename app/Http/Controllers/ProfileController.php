@@ -236,16 +236,17 @@ class ProfileController extends Controller
                     $tempSong = Song::with('author')
                         ->where('id', $song->song_id)
                         ->first();
-                    
 
                     $bill->song = [
                         'id' => $song->song_id,
                         'name' => $song->name, 
                         'quantity' => 1, 
                         'price' => $song->price,
+                        'song_path' => FileHelper::getUrl('songs', $tempSong),
                         'thumbnail_path' => FileHelper::getUrl('thumbnails', $tempSong),
                         'lyrics' => FileHelper::getLyrics($tempSong),
-                        'author_name' => $tempSong->author->name
+                        'author_name' => $tempSong->author->name,
+                        'author_avatar_path' => FileHelper::getAvatar($tempSong->author)
                     ];
                 } else {
                     $bills = Bill::where('bills.id', $bill->id)
@@ -259,8 +260,10 @@ class ProfileController extends Controller
                                 ->get();
                             $tempSongs->each(function ($song) {
                                 $song->lyrics = FileHelper::getLyrics($song);
+                                $song->song_path = FileHelper::getUrl('songs', $song);
                                 $song->thumbnail_path = FileHelper::getUrl('thumbnails', $song);
                                 $song->author_name = $song->author->name;
+                                $song->author_avatar_path = FileHelper::getAvatar($song->author);
 
                                 unset($song->thumbnail, $song->author_id, $song->author);
                             });
